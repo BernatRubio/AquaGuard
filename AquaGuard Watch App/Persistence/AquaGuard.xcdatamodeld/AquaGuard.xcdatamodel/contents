@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23788" systemVersion="24E263" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
+    <entity name="CompartmentEntity" representedClassName="CompartmentEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="compartmentNumber" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="heliumPressure" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="modificationDate" attributeType="Date" defaultDateTimeInterval="767902380" usesScalarValueType="NO"/>
+        <attribute name="nitrogenPressure" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <relationship name="dive" maxCount="1" deletionRule="Nullify" destinationEntity="DiveEntity" inverseName="compartments" inverseEntity="DiveEntity"/>
+    </entity>
+    <entity name="DecoStopEntity" representedClassName="DecoStopEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="endTime" attributeType="Date" defaultDateTimeInterval="767902260" usesScalarValueType="NO"/>
+        <attribute name="pressure" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="startTime" attributeType="Date" defaultDateTimeInterval="767902260" usesScalarValueType="NO"/>
+        <relationship name="dive" maxCount="1" deletionRule="Nullify" destinationEntity="DiveEntity" inverseName="decoStops" inverseEntity="DiveEntity"/>
+    </entity>
+    <entity name="DiveEntity" representedClassName="DiveEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="diveTime" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="endTime" attributeType="Date" defaultDateTimeInterval="767901480" usesScalarValueType="NO"/>
+        <attribute name="gfHigh" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="gfLow" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="heliumPercentage" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="id" attributeType="String" defaultValueString="&quot;00000000-0000-0000-0000-000000000000&quot;"/>
+        <attribute name="nitrogenPercentage" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="respiratoryQuotient" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="startTime" attributeType="Date" defaultDateTimeInterval="767901600" usesScalarValueType="NO"/>
+        <attribute name="surfacePressureUnit" attributeType="String" defaultValueString=""/>
+        <attribute name="surfacePressureValue" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <relationship name="compartments" toMany="YES" deletionRule="Cascade" destinationEntity="CompartmentEntity" inverseName="dive" inverseEntity="CompartmentEntity"/>
+        <relationship name="decoStops" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="DecoStopEntity" inverseName="dive" inverseEntity="DecoStopEntity"/>
+        <relationship name="measurements" toMany="YES" deletionRule="Cascade" destinationEntity="MeasurementEntity" inverseName="dive" inverseEntity="MeasurementEntity"/>
+    </entity>
+    <entity name="MeasurementEntity" representedClassName="MeasurementEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="date" attributeType="Date" defaultDateTimeInterval="767902080" usesScalarValueType="NO"/>
+        <attribute name="depthUnit" attributeType="String" defaultValueString=""/>
+        <attribute name="depthValue" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="pressureUnit" attributeType="String" defaultValueString=""/>
+        <attribute name="pressureValue" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="submersionState" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="dive" maxCount="1" deletionRule="Nullify" destinationEntity="DiveEntity" inverseName="measurements" inverseEntity="DiveEntity"/>
+    </entity>
+</model>

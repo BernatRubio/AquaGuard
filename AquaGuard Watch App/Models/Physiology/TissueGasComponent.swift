@@ -9,5 +9,5 @@ struct TissueGasComponent {
     let halfTime: Double
     let a: Double
     let b: Double
-    var pressure: Double?
+    var pressure: Double
 }
