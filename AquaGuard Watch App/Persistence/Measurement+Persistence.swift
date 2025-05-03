@@ -9,7 +9,7 @@ import CoreMotion
 import CoreData
 
 extension CMWaterSubmersionMeasurement {
-    func saveMeasurementToCoreData(diveEntity: DiveEntity, saveCooldown: Int) {
+    func saveMeasurementToCoreData(manager: SubmersionManager) {
         let context = PersistenceController.shared.container.viewContext
         let measurementEntity = MeasurementEntity(context: context)
         measurementEntity.date = self.date
@@ -27,10 +27,17 @@ extension CMWaterSubmersionMeasurement {
         let submersionState = self.submersionState.rawValue
         measurementEntity.submersionState = Int16(submersionState)
         
-        measurementEntity.dive = diveEntity
+        guard let diveSession = manager.diveSession else {
+            return
+        }
+        measurementEntity.dive = diveSession.diveEntity
         
-        if saveCooldown <= 1 {
+        if manager.cooldown <= 1 {
             PersistenceController.save()
+            manager.cooldown = 180
+        }
+        else {
+            manager.cooldown -= 1
         }
     }
 }

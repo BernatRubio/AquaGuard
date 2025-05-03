@@ -16,6 +16,7 @@ class DiveSession {
     let surfacePressure: Measurement<UnitPressure>
     var currentPressure: Measurement<UnitPressure>
     var currentDepth: Measurement<UnitLength>
+    var currentWaterTemperature: Measurement<UnitTemperature> = Measurement(value: 0, unit: .celsius)
     
     let respiratoryQuotient: Double
     
@@ -52,6 +53,36 @@ class DiveSession {
         
         decoState = DiveSession.initializeDecompressionState(firstMeasurement: firstMeasurement)
     }
+    
+    // Init for previews
+    public init(
+          id: String = UUID().uuidString,
+          startTime: Date,
+          currentTime: Date,
+          diveTime: TimeInterval,
+          surfacePressure: Measurement<UnitPressure>,
+          currentPressure: Measurement<UnitPressure>,
+          currentDepth: Measurement<UnitLength>,
+          currentWaterTemperature: Measurement<UnitTemperature>,
+          respiratoryQuotient: Double,
+          compartments: [TissueCompartment],
+          decoState: DecompressionState,
+          gasMix: GasMix,
+          gradientFactors: GradientFactorProfile
+        ) {
+          self.startTime              = startTime
+          self.currentTime            = currentTime
+          self.diveTime               = diveTime
+          self.surfacePressure        = surfacePressure
+          self.currentPressure        = currentPressure
+          self.currentDepth           = currentDepth
+          self.currentWaterTemperature = currentWaterTemperature
+          self.respiratoryQuotient    = respiratoryQuotient
+          self.compartments           = compartments
+          self.decoState              = decoState
+          self.gasMix                 = gasMix
+          self.gradientFactors        = gradientFactors
+        }
     
     func segment(measurement: CMWaterSubmersionMeasurement) {
         TissueGasSimulator.updateCompartments(session: self, measurement: measurement)
