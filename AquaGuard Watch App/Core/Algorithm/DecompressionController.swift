@@ -11,6 +11,7 @@ struct DecompressionController {
     static func updateSafetyStop(for session: DiveSession) {
         let surfacePressure = session.surfacePressure.converted(to: .bars).value
         let maxCeiling = session.compartments.max(by: { $0.ceiling < $1.ceiling })?.ceiling ?? surfacePressure
+        print("MaxCeiling: \(maxCeiling)")
         let step = 0.3 // 0.3 bar increments
         let gauge = maxCeiling - surfacePressure
         let steps = ceil(gauge / step)

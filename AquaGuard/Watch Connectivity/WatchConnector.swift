@@ -40,6 +40,15 @@ import WatchConnectivity
         UserDefaults.standard.set(message, forKey: "lastMessageReceived") // Faig això per comprovar que encara que l'App de l'iPhone no està oberta, si la sessió està activada vol dir que pot llegir els missatges que el rellotge li envia.
     }
     
+    func session(_ session: WCSession, didReceiveMessageData messageData: Data) {
+        if let jsonString = String(data: messageData, encoding: .utf8) {
+            print(jsonString)
+        }
+        else {
+            print("Couldn’t decode data as UTF-8 JSON")
+        }
+    }
+    
     func sessionDidBecomeInactive(_ session: WCSession) {
     
     }

@@ -9,10 +9,11 @@ import SwiftUI
 
 
 struct DiveView: View {
-    let session: DiveSession?
+    @State var submersionManager = SubmersionManager.sharedInstance
     var body: some View {
-        if session != nil {
-            GeneralTabView(session: session)
+        if submersionManager.diveSession != nil {
+            GeneralTabView(manager: submersionManager)
+                .navigationBarBackButtonHidden()
         }
         
         else {
@@ -22,66 +23,57 @@ struct DiveView: View {
 }
 
 #Preview {
-    let session = DiveSession.previewSession()
-    DiveView(session: session)
+//    let session = DiveSession.previewSession()
+//    DiveView(session: session)
 }
 
 struct GeneralTabView: View {
-    @AppStorage("units") var units: String = "metric"
-    let session: DiveSession?
+    @State var manager: SubmersionManager
     var body: some View {
         ZStack {
             HStack(spacing: 16) {
                 // Main info stack
                 VStack(alignment: .leading, spacing: 12) {
                     
-                    if let dive = session {
+                    if let dive = manager.diveSession {
                         // Depth
-                        DepthSubview(diveSession: dive, units: units)
+                        DepthSubview(currentDepth: dive.currentDepth)
                         
                         // Dive time
                         DiveTimeSubview(diveTime: dive.diveTime)
                         
                         // Deco stop
-                        DecoStopSubview(diveSession: dive, units: units)
+                        DecoStopSubview(currentStopDepth: dive.decoState.currentStopDepth)
+                        
+                        // Temperature
+                        TemperatureSubview(currentWaterTemperature: dive.currentWaterTemperature)
                     }
-                
-//
-//                    // Temperature
-//                    Text(String(format: "%.0f°", getTemperature()))
-//                        .font(.system(size: 48, weight: .bold))
                 }
                 .foregroundColor(.white)
-                .padding(.trailing, 16)
+                .padding(16)
+                .ignoresSafeArea(edges: .top)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.gray.opacity(0.4))
     }
-    
-    private func getTemperature() -> Double { #warning("TODO!")
-        return 0.0
-    }
 }
 
 struct DepthSubview: View {
-    let diveSession: DiveSession
-    let units: String
+    let currentDepth: Measurement<UnitLength>
     var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: 4) {
-            Text(String(format: "%.0f", getDepth()))
+            Text(String(format: "%.1f", getDepth()))
                 .font(.system(size: 48, weight: .bold))
             VStack(alignment: .leading, spacing: 2) {
-                Text("m")
+                Text("m DEPTH")
                     .font(.caption)
-                Text("DEPTH")
-                    .font(.caption2)
             }
         }
     }
     
     private func getDepth() -> Double {
-        return diveSession.currentDepth.converted(to: .meters).value
+        return currentDepth.converted(to: .meters).value
     }
 }
 
@@ -92,10 +84,8 @@ struct DiveTimeSubview: View {
             Text(formattedTime(from: diveTime))
                 .font(.system(size: 32, weight: .bold))
             VStack(alignment: .leading, spacing: 2) {
-                Text("DIVE")
+                Text("DIVE TIME")
                     .font(.caption)
-                Text("TIME")
-                    .font(.caption2)
             }
         }
     }
@@ -116,23 +106,35 @@ struct DiveTimeSubview: View {
 }
 
 struct DecoStopSubview: View {
-    let diveSession: DiveSession
-    let units: String
+    let currentStopDepth: Measurement<UnitLength>
     var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: 4) {
             Text(String(format: "%.0f", getDecoStop()))
                 .font(.system(size: 32, weight: .bold))
             VStack(alignment: .leading, spacing: 2) {
-                Text("DECO")
+                Text("m DECO STOP")
                     .font(.caption)
-                Text("STOP")
-                    .font(.caption2)
             }
         }
     }
     
     private func getDecoStop() -> Double {
-        let decoStop = diveSession.decoState.currentStopDepth.converted(to: .meters).value
+        let decoStop = currentStopDepth.converted(to: .meters).value
         return decoStop
+    }
+}
+
+struct TemperatureSubview: View {
+    let currentWaterTemperature: Measurement<UnitTemperature>
+    var body: some View {
+        HStack(alignment: .firstTextBaseline, spacing: 4) {
+            let temperature = currentWaterTemperature
+            Text(String(format: "%.0f", temperature.value))
+                .font(.system(size: 32, weight: .bold))
+            VStack(alignment: .leading, spacing: 2) {
+                Text("\(temperature.unit.symbol) WATER")
+                    .font(.caption)
+            }
+        }
     }
 }

@@ -92,6 +92,8 @@ class DiveSession {
         diveTime = measurement.date.timeIntervalSince(startTime)
         currentPressure = measurement.pressure?.converted(to: .bars) ?? currentPressure
         currentDepth = measurement.depth?.converted(to: .meters) ?? currentDepth
+        
+        debug(measurement: measurement)
     }
     
     private static func initializeCompartments(

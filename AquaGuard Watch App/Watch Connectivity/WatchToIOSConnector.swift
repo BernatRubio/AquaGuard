@@ -49,4 +49,10 @@ import WatchConnectivity
             print("Session is not reachable")
         }
     }
+    
+    func sendDataToiOS(jsonData: Data) {
+        session.sendMessageData(jsonData, replyHandler: nil) { error in
+            print(error)
+        }
+    }
 }

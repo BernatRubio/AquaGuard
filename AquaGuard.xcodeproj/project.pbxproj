@@ -621,7 +621,9 @@
 				DEVELOPMENT_TEAM = N5ZU3R9UX4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "AquaGuard-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = AquaGuard;
+				INFOPLIST_KEY_NSMotionUsageDescription = "This app needs to be able to access your motion use";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.bernatrubio.AquaGuard;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -651,7 +653,9 @@
 				DEVELOPMENT_TEAM = N5ZU3R9UX4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "AquaGuard-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = AquaGuard;
+				INFOPLIST_KEY_NSMotionUsageDescription = "This app needs to be able to access your motion use";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.bernatrubio.AquaGuard;
 				LD_RUNPATH_SEARCH_PATHS = (

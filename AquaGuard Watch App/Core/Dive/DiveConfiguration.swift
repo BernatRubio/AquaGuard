@@ -28,7 +28,7 @@ struct DiveConfiguration {
     var nitrogenPercentage: Double = 0.79
     
     var heliumPercentage: Double {
-        let percentage = 1.0 - nitrogenPercentage
+        let percentage = 0.79 - nitrogenPercentage
         return percentage
     }
 }
