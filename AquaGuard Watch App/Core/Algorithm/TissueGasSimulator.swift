@@ -11,6 +11,7 @@ struct TissueGasSimulator {
     static let config = DiveConfiguration()
     
     static func updateCompartments(session: DiveSession, measurement: CMWaterSubmersionMeasurement) {
+        let surfacePressure = session.surfacePressure.converted(to: .bars)
         let oldPressure = session.currentPressure.converted(to: .bars).value
         guard let newPressure = measurement.pressure?.converted(to: .bars).value else { return }
         let segmentTime = (measurement.date.timeIntervalSince(session.currentTime) * 1000).rounded() / 1000 // Approx. 0.333 seconds if called 3 times per second
@@ -51,7 +52,8 @@ struct TissueGasSimulator {
                 Phe: ph,
                 ahe: session.compartments[i].helium.a,
                 bhe: session.compartments[i].helium.b,
-                gf: session.gradientFactors.current
+                gf: session.gradientFactors.current,
+                surfacePressure: surfacePressure
             )
             
             session.compartments[i].modificationDate = .now

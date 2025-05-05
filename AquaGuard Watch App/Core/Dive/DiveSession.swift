@@ -51,7 +51,7 @@ class DiveSession {
         
         compartments = DiveSession.initializeCompartments(firstMeasurement: firstMeasurement, config: config)
         
-        decoState = DiveSession.initializeDecompressionState(firstMeasurement: firstMeasurement)
+        decoState = DiveSession.initializeDecompressionState()
     }
     
     // Init for previews
@@ -92,6 +92,7 @@ class DiveSession {
         diveTime = measurement.date.timeIntervalSince(startTime)
         currentPressure = measurement.pressure?.converted(to: .bars) ?? currentPressure
         currentDepth = measurement.depth?.converted(to: .meters) ?? currentDepth
+        currentTime = measurement.date
         
         debug(measurement: measurement)
     }
@@ -102,8 +103,8 @@ class DiveSession {
     ) -> [TissueCompartment] {
         var compartments: [TissueCompartment] = []
 
-        let surfacePressure = firstMeasurement.surfacePressure.converted(to: .bars).value
-        let nitrogenPressure = calculateAlveolarPressure(Pamb: surfacePressure, Q: config.nitrogenPercentage, RQ: config.respiratoryQuotient)
+        let surfacePressure = firstMeasurement.surfacePressure.converted(to: .bars)
+        let nitrogenPressure = calculateAlveolarPressure(Pamb: surfacePressure.value, Q: config.nitrogenPercentage, RQ: config.respiratoryQuotient)
 
         for i in 0..<ZHL16_N2.count {
             let nitrogenComponent = TissueGasComponent(
@@ -119,12 +120,14 @@ class DiveSession {
                 b: ZHL16_He[i].b,
                 pressure: 0.0
             )
+            
+            let ceilingPressure = calculateCeilingPressure(Pn: nitrogenPressure, an: ZHL16_N2[i].a, bn: ZHL16_N2[i].b, gf: config.gfHigh, surfacePressure: surfacePressure)
 
             let compartment = TissueCompartment(
                 compartmentNumber: i + 1,
                 nitrogen: nitrogenComponent,
                 helium: heliumComponent,
-                ceiling: surfacePressure,
+                ceiling: ceilingPressure,
                 modificationDate: Date()
             )
 
@@ -134,13 +137,8 @@ class DiveSession {
         return compartments
     }
     
-    private static func initializeDecompressionState(
-        firstMeasurement: CMWaterSubmersionMeasurement
-    ) -> DecompressionState {
-        guard let surfacePressure = firstMeasurement.pressure?.converted(to: .bars) else {
-            fatalError("Sensor returned invalid pressure")
-        }
+    private static func initializeDecompressionState() -> DecompressionState {
         let depth: Measurement<UnitLength> = .init(value: 0, unit: .meters)
-        return DecompressionState(decoStops: [], currentStop: surfacePressure, currentStopDepth: depth)
+        return DecompressionState(decoStops: [], currentStop: .init(value: 0.0, unit: .bars), currentStopDepth: depth)
     }
 }

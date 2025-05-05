@@ -22,7 +22,7 @@ struct DiveConfiguration {
 
     var gfHigh: Double {
     let high = defaults.double(forKey: "gradientFactorHigh")
-    return high != 0.0 ? high : 0.8
+    return high != 0.0 ? high : 0.7
     }
     
     var nitrogenPercentage: Double = 0.79

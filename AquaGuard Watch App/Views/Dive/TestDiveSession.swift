@@ -37,7 +37,7 @@ extension DiveSession {
                 compartmentNumber: idx,
                 nitrogen: TissueGasComponent(halfTime: 5.0, a: 1.0, b: 2.0, pressure: pN2.value),
                 helium:   TissueGasComponent(halfTime: 5.0, a: 1.0, b: 2.0, pressure: pHe.value),
-                ceiling:  0.0,
+                ceiling:  .init(value: 0.0, unit: .bars),
                 modificationDate: now
             )
         }

@@ -10,7 +10,6 @@ import SwiftUI
 struct DataSingleDiveView: View {
     let dive: DiveEntity
     var body: some View {
-        let id = dive.id ?? "No ID"
         let startTime = dive.startTime?.formatted(date: .omitted, time: .shortened) ?? "No Start Time"
         let endTime = dive.endTime?.formatted(date: .omitted, time: .shortened) ?? "No End Time"
         NavigationView {
