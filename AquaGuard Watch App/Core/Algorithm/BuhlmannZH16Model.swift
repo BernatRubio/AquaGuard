@@ -72,7 +72,7 @@ func schreinerEquation(Pi: Double, Palv: Double, t: Double, R: Double, k: Double
     return ((Palv + x1 - x2 * x3) * 10000).rounded() / 10000
 }
 
-func calculateCeilingPressure(Pn: Double, an: Double, bn: Double, Phe: Double = 0.0, ahe: Double = 0.0, bhe: Double = 0.0, gf: Double, surfacePressure: Measurement<UnitPressure>) -> Measurement<UnitPressure> {
+func calculateCeilingGaugePressure(Pn: Double, an: Double, bn: Double, Phe: Double = 0.0, ahe: Double = 0.0, bhe: Double = 0.0, gf: Double, surfacePressure: Measurement<UnitPressure>) -> Measurement<UnitPressure> {
     let P = Pn + Phe
     guard P > 0.0 else { fatalError("P must be greater than zero") }
     let a = (an * Pn + ahe * Phe) / P

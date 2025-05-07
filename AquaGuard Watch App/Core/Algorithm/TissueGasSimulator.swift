@@ -45,7 +45,7 @@ struct TissueGasSimulator {
             
             session.compartments[i].helium.pressure = ph
             
-            session.compartments[i].ceiling = calculateCeilingPressure(
+            session.compartments[i].ceiling = calculateCeilingGaugePressure(
                 Pn: pn,
                 an: session.compartments[i].nitrogen.a,
                 bn: session.compartments[i].nitrogen.b,

@@ -87,7 +87,7 @@ class DiveSession {
     func segment(measurement: CMWaterSubmersionMeasurement) {
         TissueGasSimulator.updateCompartments(session: self, measurement: measurement)
         CompartmentPersistence.persistCompartments(in: PersistenceController.shared.container.viewContext, for: self)
-        DecompressionController.updateSafetyStop(for: self)
+        DecompressionController.updateDecompressionStop(for: self)
         
         diveTime = measurement.date.timeIntervalSince(startTime)
         currentPressure = measurement.pressure?.converted(to: .bars) ?? currentPressure
@@ -121,7 +121,7 @@ class DiveSession {
                 pressure: 0.0
             )
             
-            let ceilingPressure = calculateCeilingPressure(Pn: nitrogenPressure, an: ZHL16_N2[i].a, bn: ZHL16_N2[i].b, gf: config.gfHigh, surfacePressure: surfacePressure)
+            let ceilingPressure = calculateCeilingGaugePressure(Pn: nitrogenPressure, an: ZHL16_N2[i].a, bn: ZHL16_N2[i].b, gf: config.gfHigh, surfacePressure: surfacePressure)
 
             let compartment = TissueCompartment(
                 compartmentNumber: i + 1,
