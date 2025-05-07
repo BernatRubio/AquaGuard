@@ -29,7 +29,7 @@ extension DiveSession {
             decoStopEntity.dive = diveEntity
             decoStopEntity.startTime = decoStop.startTime
             decoStopEntity.endTime = decoStop.endTime
-            decoStopEntity.pressure = decoStop.pressure.value
+            decoStopEntity.gaugePressure = decoStop.gaugePressure.value
         }
         
         CompartmentPersistence.persistCompartments(in: context, for: self, mustSave: true)

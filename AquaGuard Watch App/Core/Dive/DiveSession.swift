@@ -127,7 +127,7 @@ class DiveSession {
                 compartmentNumber: i + 1,
                 nitrogen: nitrogenComponent,
                 helium: heliumComponent,
-                ceiling: ceilingPressure,
+                gaugeCeiling: ceilingPressure,
                 modificationDate: Date()
             )
 
@@ -139,6 +139,6 @@ class DiveSession {
     
     private static func initializeDecompressionState() -> DecompressionState {
         let depth: Measurement<UnitLength> = .init(value: 0, unit: .meters)
-        return DecompressionState(decoStops: [], currentStop: .init(value: 0.0, unit: .bars), currentStopDepth: depth)
+        return DecompressionState(decoStops: [], currentStopGaugePressure: .init(value: 0.0, unit: .bars), currentStopDepth: depth)
     }
 }

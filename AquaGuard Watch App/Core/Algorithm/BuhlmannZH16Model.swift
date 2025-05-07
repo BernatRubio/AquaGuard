@@ -6,45 +6,48 @@
 //
 
 import Foundation
+import CoreMotion
+
+let zeroPressure: Measurement<UnitPressure> = .init(value: 0.0, unit: .bars)
 
 // Revisat i correcte segons TAUCHMEDIZIN
 let ZHL16_N2: [TissueGasComponent] = [
-    TissueGasComponent(halfTime: 5.0, a: 1.1696, b: 0.5578, pressure: 0.0),
-    TissueGasComponent(halfTime: 8.0, a: 1.0, b: 0.6514, pressure: 0.0),
-    TissueGasComponent(halfTime: 12.5, a: 0.8618, b: 0.7222, pressure: 0.0),
-    TissueGasComponent(halfTime: 18.5, a: 0.7562, b: 0.7825, pressure: 0.0),
-    TissueGasComponent(halfTime: 27.0, a: 0.62, b: 0.8126, pressure: 0.0),
-    TissueGasComponent(halfTime: 38.3, a: 0.5043, b: 0.8434, pressure: 0.0),
-    TissueGasComponent(halfTime: 54.3, a: 0.441, b: 0.8693, pressure: 0.0),
-    TissueGasComponent(halfTime: 77.0, a: 0.4, b: 0.891, pressure: 0.0),
-    TissueGasComponent(halfTime: 109.0, a: 0.375, b: 0.9092, pressure: 0.0),
-    TissueGasComponent(halfTime: 146.0, a: 0.35, b: 0.9222, pressure: 0.0),
-    TissueGasComponent(halfTime: 187.0, a: 0.3295, b: 0.9319, pressure: 0.0),
-    TissueGasComponent(halfTime: 239.0, a: 0.3065, b: 0.9403, pressure: 0.0),
-    TissueGasComponent(halfTime: 305.0, a: 0.2835, b: 0.9477, pressure: 0.0),
-    TissueGasComponent(halfTime: 390.0, a: 0.261, b: 0.9544, pressure: 0.0),
-    TissueGasComponent(halfTime: 498.0, a: 0.248, b: 0.9602, pressure: 0.0),
-    TissueGasComponent(halfTime: 635.0, a: 0.2327, b: 0.9653, pressure: 0.0)
+    TissueGasComponent(halfTime: 5.0, a: 1.1696, b: 0.5578, pressure: zeroPressure),
+    TissueGasComponent(halfTime: 8.0, a: 1.0, b: 0.6514, pressure: zeroPressure),
+    TissueGasComponent(halfTime: 12.5, a: 0.8618, b: 0.7222, pressure: zeroPressure),
+    TissueGasComponent(halfTime: 18.5, a: 0.7562, b: 0.7825, pressure: zeroPressure),
+    TissueGasComponent(halfTime: 27.0, a: 0.62, b: 0.8126, pressure: zeroPressure),
+    TissueGasComponent(halfTime: 38.3, a: 0.5043, b: 0.8434, pressure: zeroPressure),
+    TissueGasComponent(halfTime: 54.3, a: 0.441, b: 0.8693, pressure: zeroPressure),
+    TissueGasComponent(halfTime: 77.0, a: 0.4, b: 0.891, pressure: zeroPressure),
+    TissueGasComponent(halfTime: 109.0, a: 0.375, b: 0.9092, pressure: zeroPressure),
+    TissueGasComponent(halfTime: 146.0, a: 0.35, b: 0.9222, pressure: zeroPressure),
+    TissueGasComponent(halfTime: 187.0, a: 0.3295, b: 0.9319, pressure: zeroPressure),
+    TissueGasComponent(halfTime: 239.0, a: 0.3065, b: 0.9403, pressure: zeroPressure),
+    TissueGasComponent(halfTime: 305.0, a: 0.2835, b: 0.9477, pressure: zeroPressure),
+    TissueGasComponent(halfTime: 390.0, a: 0.261, b: 0.9544, pressure: zeroPressure),
+    TissueGasComponent(halfTime: 498.0, a: 0.248, b: 0.9602, pressure: zeroPressure),
+    TissueGasComponent(halfTime: 635.0, a: 0.2327, b: 0.9653, pressure: zeroPressure)
 ]
 
 // Revisat i correcte segons TAUCHMEDIZIN
 let ZHL16_He: [TissueGasComponent] = [
-    TissueGasComponent(halfTime: 1.88, a: 1.6189, b: 0.477, pressure: 0.0),
-    TissueGasComponent(halfTime: 3.02, a: 1.383, b: 0.5747, pressure: 0.0),
-    TissueGasComponent(halfTime: 4.72, a: 1.1919, b: 0.6527, pressure: 0.0),
-    TissueGasComponent(halfTime: 6.99, a: 1.0458, b: 0.7223, pressure: 0.0),
-    TissueGasComponent(halfTime: 10.21, a: 0.922, b: 0.7582, pressure: 0.0),
-    TissueGasComponent(halfTime: 14.48, a: 0.8205, b: 0.7957, pressure: 0.0),
-    TissueGasComponent(halfTime: 20.53, a: 0.7305, b: 0.8279, pressure: 0.0),
-    TissueGasComponent(halfTime: 29.11, a: 0.6502, b: 0.8553, pressure: 0.0),
-    TissueGasComponent(halfTime: 41.20, a: 0.595, b: 0.8757, pressure: 0.0),
-    TissueGasComponent(halfTime: 55.19, a: 0.5545, b: 0.8903, pressure: 0.0),
-    TissueGasComponent(halfTime: 70.69, a: 0.5333, b: 0.8997, pressure: 0.0),
-    TissueGasComponent(halfTime: 90.34, a: 0.5189, b: 0.9073, pressure: 0.0),
-    TissueGasComponent(halfTime: 115.29, a: 0.5181, b: 0.9122, pressure: 0.0),
-    TissueGasComponent(halfTime: 147.42, a: 0.5176, b: 0.9171, pressure: 0.0),
-    TissueGasComponent(halfTime: 188.24, a: 0.5172, b: 0.9217, pressure: 0.0),
-    TissueGasComponent(halfTime: 240.03, a: 0.5119, b: 0.9267, pressure: 0.0)
+    TissueGasComponent(halfTime: 1.88, a: 1.6189, b: 0.477, pressure: zeroPressure),
+    TissueGasComponent(halfTime: 3.02, a: 1.383, b: 0.5747, pressure: zeroPressure),
+    TissueGasComponent(halfTime: 4.72, a: 1.1919, b: 0.6527, pressure: zeroPressure),
+    TissueGasComponent(halfTime: 6.99, a: 1.0458, b: 0.7223, pressure: zeroPressure),
+    TissueGasComponent(halfTime: 10.21, a: 0.922, b: 0.7582, pressure: zeroPressure),
+    TissueGasComponent(halfTime: 14.48, a: 0.8205, b: 0.7957, pressure: zeroPressure),
+    TissueGasComponent(halfTime: 20.53, a: 0.7305, b: 0.8279, pressure: zeroPressure),
+    TissueGasComponent(halfTime: 29.11, a: 0.6502, b: 0.8553, pressure: zeroPressure),
+    TissueGasComponent(halfTime: 41.20, a: 0.595, b: 0.8757, pressure: zeroPressure),
+    TissueGasComponent(halfTime: 55.19, a: 0.5545, b: 0.8903, pressure: zeroPressure),
+    TissueGasComponent(halfTime: 70.69, a: 0.5333, b: 0.8997, pressure: zeroPressure),
+    TissueGasComponent(halfTime: 90.34, a: 0.5189, b: 0.9073, pressure: zeroPressure),
+    TissueGasComponent(halfTime: 115.29, a: 0.5181, b: 0.9122, pressure: zeroPressure),
+    TissueGasComponent(halfTime: 147.42, a: 0.5176, b: 0.9171, pressure: zeroPressure),
+    TissueGasComponent(halfTime: 188.24, a: 0.5172, b: 0.9217, pressure: zeroPressure),
+    TissueGasComponent(halfTime: 240.03, a: 0.5119, b: 0.9267, pressure: zeroPressure)
 ]
 
 func calculateAlveolarPressure(Pamb: Double, Q: Double, RQ: Double) -> Double {

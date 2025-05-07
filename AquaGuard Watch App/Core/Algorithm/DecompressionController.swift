@@ -10,7 +10,7 @@ import Foundation
 struct DecompressionController {
     static func updateDecompressionStop(for session: DiveSession) {
         let surfacePressure = session.surfacePressure.converted(to: .bars).value
-        let maxGaugeCeiling = session.compartments.max(by: { $0.ceiling.value < $1.ceiling.value })?.ceiling.converted(to: .bars).value ?? 0.0
+        let maxGaugeCeiling = session.compartments.max(by: { $0.gaugeCeiling.value < $1.gaugeCeiling.value })?.gaugeCeiling.converted(to: .bars).value ?? 0.0
         let step = 0.3 // 0.3 bar increments
         let steps = ceil(maxGaugeCeiling / step)
         let rawStop = surfacePressure + steps * step
@@ -18,7 +18,7 @@ struct DecompressionController {
         let precision = 10.0 // for one decimal place
         let decompressionStopRounded = (decompressionStop * precision).rounded() / precision
         let measurementPressure: Measurement<UnitPressure> = .init(value: decompressionStopRounded, unit: .bars)
-        session.decoState.currentStop = measurementPressure
+        session.decoState.currentStopGaugePressure = measurementPressure
         let measurementDepth: Measurement<UnitLength> = .init(value: UnitConverter.barToMeterSeaWater(maxGaugeCeiling), unit: .meters)
         session.decoState.currentStopDepth = measurementDepth
     }
@@ -27,10 +27,10 @@ struct DecompressionController {
         let DESCENDING_THRESHOLD = 0.3
         let currentPressure = session.currentPressure.converted(to: .bars).value
         let surfacePressure = session.surfacePressure.converted(to: .bars).value
-        let currentStopGaugePressure = session.decoState.currentStop.converted(to: .bars).value
+        let currentStopGaugePressure = session.decoState.currentStopGaugePressure.converted(to: .bars).value
         let decompressionStopPressure = currentStopGaugePressure + surfacePressure
         var lastDecoStopPressure: Double {
-            if let lastDecoStopGaugePressure = session.decoState.decoStops.last?.pressure.value {
+            if let lastDecoStopGaugePressure = session.decoState.decoStops.last?.gaugePressure.value {
                 return lastDecoStopGaugePressure + surfacePressure
             }
             return Double(Int.max)
@@ -42,15 +42,15 @@ struct DecompressionController {
         }
         
         if decompressionStopPressure >= currentPressure {
-            if let index = session.decoState.decoStops.firstIndex(where: {$0.pressure.value == decompressionStopPressure }) {
+            if let index = session.decoState.decoStops.firstIndex(where: {$0.gaugePressure.value == decompressionStopPressure }) {
                 // If the stop exists, we modify the stop end time
                 session.decoState.decoStops[index].setEndTime()
             }
             else {
-                session.decoState.decoStops.append(DecoStop(pressure: session.decoState.currentStop))
+                session.decoState.decoStops.append(DecoStop(gaugePressure: session.decoState.currentStopGaugePressure))
             }
             
-            guard let firstDecoStopGaugePressure = session.decoState.decoStops.first?.pressure.value else { fatalError("Must have at least one deco stop to calculate gradient factor") }
+            guard let firstDecoStopGaugePressure = session.decoState.decoStops.first?.gaugePressure.value else { fatalError("Must have at least one deco stop to calculate gradient factor") }
             let firstDecoStopPressure = firstDecoStopGaugePressure + surfacePressure
             
             let gfHigh = session.gradientFactors.high

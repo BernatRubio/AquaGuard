@@ -35,9 +35,9 @@ extension DiveSession {
         let compartments: [TissueCompartment] = (1...16).map { idx in
             TissueCompartment(
                 compartmentNumber: idx,
-                nitrogen: TissueGasComponent(halfTime: 5.0, a: 1.0, b: 2.0, pressure: pN2.value),
-                helium:   TissueGasComponent(halfTime: 5.0, a: 1.0, b: 2.0, pressure: pHe.value),
-                ceiling:  .init(value: 0.0, unit: .bars),
+                nitrogen: TissueGasComponent(halfTime: 5.0, a: 1.0, b: 2.0, pressure: pN2),
+                helium:   TissueGasComponent(halfTime: 5.0, a: 1.0, b: 2.0, pressure: pHe),
+                gaugeCeiling:  .init(value: 0.0, unit: .bars),
                 modificationDate: now
             )
         }
@@ -45,7 +45,7 @@ extension DiveSession {
         // 5) Start with no deco stops:
         let decoState = DecompressionState(
             decoStops:       [],
-            currentStop:     surfaceP,
+            currentStopGaugePressure:     .init(value: 0.0, unit: .bars),
             currentStopDepth: depth
         )
         

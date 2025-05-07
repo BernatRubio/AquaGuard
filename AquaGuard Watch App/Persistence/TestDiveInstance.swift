@@ -39,13 +39,13 @@ extension DiveEntity {
         let stop1 = DecoStopEntity(context: context)
         stop1.endTime    = Date().addingTimeInterval(2.0)
         stop1.startTime  = Date()
-        stop1.pressure   = 2.0
+        stop1.gaugePressure   = 2.0
         dive.addToDecoStops(stop1)
         
         let stop2 = DecoStopEntity(context: context)
         stop2.endTime    = Date().addingTimeInterval(5.0)
         stop2.startTime  = Date()
-        stop2.pressure   = 6.0
+        stop2.gaugePressure   = 6.0
         dive.addToDecoStops(stop2)
         
         // MARK: — Measurements

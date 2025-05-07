@@ -2,14 +2,16 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23788" systemVersion="24E263" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
     <entity name="CompartmentEntity" representedClassName="CompartmentEntity" syncable="YES" codeGenerationType="class">
         <attribute name="compartmentNumber" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="heliumPressure" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="heliumPressureUnit" attributeType="String" defaultValueString=""/>
+        <attribute name="heliumPressureValue" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="modificationDate" attributeType="Date" defaultDateTimeInterval="767902380" usesScalarValueType="NO"/>
-        <attribute name="nitrogenPressure" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="nitrogenPressureUnit" attributeType="String" defaultValueString=""/>
+        <attribute name="nitrogenPressureValue" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <relationship name="dive" maxCount="1" deletionRule="Nullify" destinationEntity="DiveEntity" inverseName="compartments" inverseEntity="DiveEntity"/>
     </entity>
     <entity name="DecoStopEntity" representedClassName="DecoStopEntity" syncable="YES" codeGenerationType="class">
         <attribute name="endTime" attributeType="Date" defaultDateTimeInterval="767902260" usesScalarValueType="NO"/>
-        <attribute name="pressure" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="gaugePressure" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="startTime" attributeType="Date" defaultDateTimeInterval="767902260" usesScalarValueType="NO"/>
         <relationship name="dive" maxCount="1" deletionRule="Nullify" destinationEntity="DiveEntity" inverseName="decoStops" inverseEntity="DiveEntity"/>
     </entity>

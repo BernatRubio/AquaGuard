@@ -11,6 +11,6 @@ struct TissueCompartment {
     let compartmentNumber: Int
     var nitrogen: TissueGasComponent
     var helium: TissueGasComponent
-    var ceiling: Measurement<UnitPressure>
+    var gaugeCeiling: Measurement<UnitPressure>
     var modificationDate: Date
 }

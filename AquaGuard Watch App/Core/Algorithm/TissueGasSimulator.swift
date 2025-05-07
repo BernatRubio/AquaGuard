@@ -18,7 +18,7 @@ struct TissueGasSimulator {
         guard segmentTime > 0 else { return }
         
         for i in 0..<ZHL16_N2.count {
-            let nitrogenPressure = session.compartments[i].nitrogen.pressure
+            let nitrogenPressure = session.compartments[i].nitrogen.pressure.converted(to: .bars).value
             let nitrogenPercentage = session.gasMix.nitrogenPercentage
             let respiratoryQuotient = config.respiratoryQuotient
             
@@ -30,9 +30,9 @@ struct TissueGasSimulator {
                 k: decayConstant(fromHalfTime: session.compartments[i].nitrogen.halfTime)
             )
             
-            session.compartments[i].nitrogen.pressure = pn
+            session.compartments[i].nitrogen.pressure = .init(value: pn, unit: .bars)
             
-            let heliumPressure = session.compartments[i].helium.pressure
+            let heliumPressure = session.compartments[i].helium.pressure.converted(to: .bars).value
             let heliumPercentage = session.gasMix.heliumPercentage
             
             let ph = schreinerEquation(
@@ -43,9 +43,9 @@ struct TissueGasSimulator {
                 k: decayConstant(fromHalfTime: session.compartments[i].helium.halfTime)
             )
             
-            session.compartments[i].helium.pressure = ph
+            session.compartments[i].helium.pressure = .init(value: ph, unit: .bars)
             
-            session.compartments[i].ceiling = calculateCeilingGaugePressure(
+            session.compartments[i].gaugeCeiling = calculateCeilingGaugePressure(
                 Pn: pn,
                 an: session.compartments[i].nitrogen.a,
                 bn: session.compartments[i].nitrogen.b,

@@ -15,8 +15,12 @@ struct CompartmentPersistence {
             for compartment in session.compartments {
                 let compartmentEntity = CompartmentEntity(context: context)
                 compartmentEntity.compartmentNumber = Int16(compartment.compartmentNumber)
-                compartmentEntity.nitrogenPressure = compartment.nitrogen.pressure
-                compartmentEntity.heliumPressure = compartment.helium.pressure
+                let nitrogenPressure = compartment.nitrogen.pressure.converted(to: .bars)
+                let heliumPressure = compartment.helium.pressure.converted(to: .bars)
+                compartmentEntity.nitrogenPressureValue = nitrogenPressure.value
+                compartmentEntity.nitrogenPressureUnit = nitrogenPressure.unit.symbol
+                compartmentEntity.heliumPressureValue = heliumPressure.value
+                compartmentEntity.heliumPressureUnit = heliumPressure.unit.symbol
                 compartmentEntity.modificationDate = compartment.modificationDate
                 compartmentEntity.dive = session.diveEntity
             }

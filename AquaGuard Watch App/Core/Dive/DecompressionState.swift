@@ -9,6 +9,6 @@ import Foundation
 
 struct DecompressionState {
     var decoStops: [DecoStop]
-    var currentStop: Measurement<UnitPressure>
+    var currentStopGaugePressure: Measurement<UnitPressure>
     var currentStopDepth: Measurement<UnitLength>
 }

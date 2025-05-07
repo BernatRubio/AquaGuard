@@ -15,6 +15,6 @@ extension DecoStopEntity: Encodable {
       // Attributes
       try c.encode(startTime,        forKey: .startTime)
       try c.encode(endTime,          forKey: .endTime)
-      try c.encode(pressure,         forKey: .pressure)
+      try c.encode(gaugePressure,         forKey: .pressure)
   }
 }
