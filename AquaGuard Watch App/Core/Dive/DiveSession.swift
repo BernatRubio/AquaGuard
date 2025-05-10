@@ -111,14 +111,14 @@ class DiveSession {
                 halfTime: ZHL16_N2[i].halfTime,
                 a: ZHL16_N2[i].a,
                 b: ZHL16_N2[i].b,
-                pressure: nitrogenPressure
+                pressure: .init(value: nitrogenPressure, unit: .bars)
             )
 
             let heliumComponent = TissueGasComponent(
                 halfTime: ZHL16_He[i].halfTime,
                 a: ZHL16_He[i].a,
                 b: ZHL16_He[i].b,
-                pressure: 0.0
+                pressure: .init(value: 0.0, unit: .bars)
             )
             
             let ceilingPressure = calculateCeilingGaugePressure(Pn: nitrogenPressure, an: ZHL16_N2[i].a, bn: ZHL16_N2[i].b, gf: config.gfHigh, surfacePressure: surfacePressure)

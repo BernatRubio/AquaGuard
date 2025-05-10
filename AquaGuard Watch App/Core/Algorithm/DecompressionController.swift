@@ -14,12 +14,12 @@ struct DecompressionController {
         let step = 0.3 // 0.3 bar increments
         let steps = ceil(maxGaugeCeiling / step)
         let rawStop = surfacePressure + steps * step
-        let decompressionStop = rawStop == 0 ? 0 : ceil(rawStop / 3) * 3 // If decoStop is at 0 m, don't round it to 3 m
+        let decompressionStop = rawStop == 0 ? 0 : ceil(rawStop / 0.3) * 0.3 // If decoStop is at 0 m, don't round it to 3 m
         let precision = 10.0 // for one decimal place
         let decompressionStopRounded = (decompressionStop * precision).rounded() / precision
         let measurementPressure: Measurement<UnitPressure> = .init(value: decompressionStopRounded, unit: .bars)
         session.decoState.currentStopGaugePressure = measurementPressure
-        let measurementDepth: Measurement<UnitLength> = .init(value: UnitConverter.barToMeterSeaWater(maxGaugeCeiling), unit: .meters)
+        let measurementDepth: Measurement<UnitLength> = .init(value: UnitConverter.barToMeterSeaWater(decompressionStop), unit: .meters)
         session.decoState.currentStopDepth = measurementDepth
     }
     

@@ -29,8 +29,8 @@ extension DiveEntity {
         for i in 1...3 {
             let comp = CompartmentEntity(context: context)
             comp.compartmentNumber   = Int16(i)
-            comp.heliumPressure      = Double(i) * 0.1
-            comp.nitrogenPressure    = Double(i) * 0.2
+            comp.heliumPressureValue      = Double(i) * 0.1
+            comp.nitrogenPressureValue    = Double(i) * 0.2
             comp.modificationDate    = Date()
             dive.addToCompartments(comp)
         }
