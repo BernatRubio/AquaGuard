@@ -15,7 +15,7 @@ struct TissueGasSimulator {
         let oldPressure = session.currentPressure.converted(to: .bars).value
         guard let newPressure = measurement.pressure?.converted(to: .bars).value else { return }
         let segmentTime = (measurement.date.timeIntervalSince(session.currentTime) * 1000).rounded() / 1000 // Approx. 0.333 seconds if called 3 times per second
-        let segmentTimeInMinutes = segmentTime / 60
+        let segmentTimeInMinutes = ((segmentTime / 60) * 100000).rounded() / 100000
         guard segmentTimeInMinutes > 0 else { return }
         
         for i in 0..<ZHL16_N2.count {
