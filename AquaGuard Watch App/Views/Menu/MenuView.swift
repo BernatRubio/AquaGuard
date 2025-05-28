@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct MainView: View {
+struct MenuView: View {
     var body: some View {
         TabView {
             StartDiveView()

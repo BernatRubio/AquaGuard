@@ -24,7 +24,7 @@ struct DecompressionController {
         session.decoState.currentStopDepth = measurementDepth
     }
     
-    static func checkSafetyStop(for session: DiveSession) {
+    static func checkDecoStop(for session: DiveSession) {
         let DESCENDING_THRESHOLD = 0.3
         let currentPressure = session.currentPressure.converted(to: .bars).value
         let surfacePressure = session.surfacePressure.converted(to: .bars).value
@@ -37,9 +37,8 @@ struct DecompressionController {
             return Double(Int.max)
         }
         if currentPressure >= lastDecoStopPressure + DESCENDING_THRESHOLD {
-            // If diving deeper than the last deco stop plus a threshold, reset deco stops and gradient factor
+            // If diving deeper than the last deco stop plus a threshold, reset deco stops
             session.decoState.decoStops = []
-            session.gradientFactors.current = session.gradientFactors.low
         }
         
         if decompressionStopPressure >= currentPressure {
@@ -51,15 +50,15 @@ struct DecompressionController {
                 session.decoState.decoStops.append(DecoStop(gaugePressure: session.decoState.currentStopGaugePressure))
             }
             
-            guard let firstDecoStopGaugePressure = session.decoState.decoStops.first?.gaugePressure.value else { fatalError("Must have at least one deco stop to calculate gradient factor") }
-            let firstDecoStopPressure = firstDecoStopGaugePressure + surfacePressure
-            
-            let gfHigh = session.gradientFactors.high
-            let gfLow = session.gradientFactors.low
-            let finalDecoStopPressure = surfacePressure + 0.3 // Final stop at 3 m
-            
-            let gfSlope = (gfHigh - gfLow) / (finalDecoStopPressure - firstDecoStopPressure)
-            session.gradientFactors.current = (((gfSlope * (decompressionStopPressure - finalDecoStopPressure)) + gfHigh) * 100).rounded() / 100
+//            guard let firstDecoStopGaugePressure = session.decoState.decoStops.first?.gaugePressure.value else { fatalError("Must have at least one deco stop to calculate gradient factor") }
+//            let firstDecoStopPressure = firstDecoStopGaugePressure + surfacePressure
+//            
+//            let gfHigh = session.gradientFactors.high
+//            let gfLow = session.gradientFactors.low
+//            let finalDecoStopPressure = surfacePressure + 0.3 // Final stop at 3 m
+//            
+//            let gfSlope = (gfHigh - gfLow) / (finalDecoStopPressure - firstDecoStopPressure)
+//            session.gradientFactors.current = (((gfSlope * (decompressionStopPressure - finalDecoStopPressure)) + gfHigh) * 100).rounded() / 100
         }
     }
 }

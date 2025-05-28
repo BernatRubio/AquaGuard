@@ -23,8 +23,8 @@ struct DiveView: View {
 }
 
 #Preview {
-//    let session = DiveSession.previewSession()
-//    DiveView(session: session)
+    let session = DiveSession.previewSession()
+    DiveView()
 }
 
 struct GeneralTabView: View {
