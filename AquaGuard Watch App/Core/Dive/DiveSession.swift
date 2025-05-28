@@ -51,7 +51,7 @@ class DiveSession {
         
         compartments = DiveSession.initializeCompartments(firstMeasurement: firstMeasurement, config: config)
         
-        decoState = DiveSession.initializeDecompressionState()
+        decoState = DiveSession.initializeDecompressionState(surfacePressure: surfacePressure)
     }
     
     // Init for previews
@@ -97,6 +97,60 @@ class DiveSession {
         debug(measurement: measurement)
     }
     
+    func getLowestCeiling() -> Measurement<UnitPressure> {
+        var lowestCeiling = self.decoState.gfLowPressureThisDive.converted(to: .bars).value
+        let gfLow = self.gradientFactors.low
+        
+        for compartment in self.compartments {
+            let an = compartment.nitrogen.a
+            let bn = compartment.nitrogen.b
+            let Pn = compartment.nitrogen.pressure.converted(to: .bars).value
+            let ahe = compartment.helium.a
+            let bhe = compartment.helium.b
+            let Phe = compartment.helium.pressure.converted(to: .bars).value
+            
+            let P = Pn + Phe
+            let a = (an * Pn + ahe * Phe) / P
+            let b = (bn * Pn + bhe * Phe) / P
+            
+            let tissueLowestCeiling = (b * P - gfLow * a * b) / ((1.0 - b) * gfLow + b)
+            lowestCeiling = max(lowestCeiling, tissueLowestCeiling)
+        }
+        
+        let lowestCeilingObj: Measurement<UnitPressure> = .init(value: lowestCeiling, unit: .bars)
+        self.decoState.gfLowPressureThisDive = lowestCeilingObj
+        
+        return lowestCeilingObj
+    }
+    
+    func updateCompartmentsCeilings() {
+        let surfacePressure = self.surfacePressure
+        let gfHigh = self.gradientFactors.high
+        let gfLow = self.gradientFactors.low
+        var retToleranceLimitAmbientPressure: Double = 0.0
+        
+        let gfLowPressureThisDive = getLowestCeiling()
+        
+        for i in 0..<self.compartments.count {
+            let an = self.compartments[i].nitrogen.a
+            let bn = self.compartments[i].nitrogen.b
+            let Pn = self.compartments[i].nitrogen.pressure
+            let ahe = self.compartments[i].helium.a
+            let bhe = self.compartments[i].helium.b
+            let Phe = self.compartments[i].helium.pressure
+            
+            let tolerated = calculateCeilingGaugePressure(Pn: Pn, an: an, bn: bn, Phe: Phe, ahe: ahe, bhe: bhe, surfacePressure: surfacePressure, gfHigh: gfHigh, gfLow: gfLow, gfLowPressureThisDive: gfLowPressureThisDive, retToleranceLimitAmbientPressure: retToleranceLimitAmbientPressure)
+            
+            self.compartments[i].gaugeCeiling = tolerated
+            
+            let toleratedValue = tolerated.converted(to: .bars).value
+            
+            if (toleratedValue >= retToleranceLimitAmbientPressure) {
+                retToleranceLimitAmbientPressure = toleratedValue
+            }
+        }
+    }
+    
     private static func initializeCompartments(
         firstMeasurement: CMWaterSubmersionMeasurement,
         config: DiveConfiguration
@@ -120,14 +174,12 @@ class DiveSession {
                 b: ZHL16_He[i].b,
                 pressure: .init(value: 0.0, unit: .bars)
             )
-            
-            let ceilingPressure = calculateCeilingGaugePressure(Pn: nitrogenPressure, an: ZHL16_N2[i].a, bn: ZHL16_N2[i].b, gf: config.gfHigh, surfacePressure: surfacePressure)
 
             let compartment = TissueCompartment(
                 compartmentNumber: i + 1,
                 nitrogen: nitrogenComponent,
                 helium: heliumComponent,
-                gaugeCeiling: ceilingPressure,
+                gaugeCeiling: .init(value: 0.0, unit: .bars),
                 modificationDate: Date()
             )
 
@@ -137,8 +189,9 @@ class DiveSession {
         return compartments
     }
     
-    private static func initializeDecompressionState() -> DecompressionState {
+    private static func initializeDecompressionState(surfacePressure: Measurement<UnitPressure>) -> DecompressionState {
         let depth: Measurement<UnitLength> = .init(value: 0, unit: .meters)
-        return DecompressionState(decoStops: [], currentStopGaugePressure: .init(value: 0.0, unit: .bars), currentStopDepth: depth)
+        let gfLowPressureThisDive = surfacePressure.converted(to: .bars).value + 1.0
+        return DecompressionState(decoStops: [], currentStopGaugePressure: .init(value: 0.0, unit: .bars), currentStopDepth: depth, gfLowPressureThisDive: .init(value: gfLowPressureThisDive, unit: .bars))
     }
 }

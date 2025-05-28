@@ -75,15 +75,49 @@ func schreinerEquation(Pi: Double, Palv: Double, t: Double, R: Double, k: Double
     return ((Palv + x1 - x2 * x3) * 10000).rounded() / 10000
 }
 
-func calculateCeilingGaugePressure(Pn: Double, an: Double, bn: Double, Phe: Double = 0.0, ahe: Double = 0.0, bhe: Double = 0.0, gf: Double, surfacePressure: Measurement<UnitPressure>) -> Measurement<UnitPressure> {
+//func calculateCeilingGaugePressure(Pn: Double, an: Double, bn: Double, Phe: Double = 0.0, ahe: Double = 0.0, bhe: Double = 0.0, gf: Double, surfacePressure: Measurement<UnitPressure>) -> Measurement<UnitPressure> {
+//    let P = Pn + Phe
+//    guard P > 0.0 else { fatalError("P must be greater than zero") }
+//    let a = (an * Pn + ahe * Phe) / P
+//    let b = (bn * Pn + bhe * Phe) / P
+//    let num = P - a * gf
+//    let den = gf / b + 1.0 - gf
+//    guard den != 0.0 else { fatalError("denominator can't be zero") }
+//    let ceiling = ((num / den) * 10000).rounded() / 10000
+//    let gaugeCeiling = max(ceiling - surfacePressure.converted(to: .bars).value, 0.0)
+//    return .init(value: gaugeCeiling, unit: .bars)
+//}
+
+func calculateCeilingGaugePressure(Pn: Measurement<UnitPressure>, an: Double, bn: Double, Phe: Measurement<UnitPressure>, ahe: Double, bhe: Double, surfacePressure: Measurement<UnitPressure>, gfHigh: Double, gfLow: Double, gfLowPressureThisDive: Measurement<UnitPressure>, retToleranceLimitAmbientPressure: Double) -> Measurement<UnitPressure> {
+    
+    let Pn = Pn.converted(to: .bars).value
+    let Phe = Phe.converted(to: .bars).value
     let P = Pn + Phe
-    guard P > 0.0 else { fatalError("P must be greater than zero") }
     let a = (an * Pn + ahe * Phe) / P
     let b = (bn * Pn + bhe * Phe) / P
-    let num = P - a * gf
-    let den = gf / b + 1.0 - gf
-    guard den != 0.0 else { fatalError("denominator can't be zero") }
-    let ceiling = ((num / den) * 10000).rounded() / 10000
-    let gaugeCeiling = max(ceiling - surfacePressure.converted(to: .bars).value, 0.0)
-    return .init(value: gaugeCeiling, unit: .bars)
+    
+    let surfacePressureValue = surfacePressure.converted(to: .bars).value
+    let gfLowPressureValueThisDive = gfLowPressureThisDive.converted(to: .bars).value
+    
+    let expr1 = (surfacePressureValue / b + a - surfacePressureValue) * gfHigh
+    let expr2 = (gfLowPressureValueThisDive / b + a - gfLowPressureValueThisDive)
+    
+    let condition = expr1 + surfacePressureValue < expr2 * gfLow + gfLowPressureValueThisDive
+    
+    var tolerated: Double = 0.0
+    
+    if condition {
+        let num = (-a * b * (gfHigh * gfLowPressureValueThisDive - gfLow * surfacePressureValue) - (1.0 - b) * (gfHigh - gfLow) * gfLowPressureValueThisDive * surfacePressureValue + b * (gfLowPressureValueThisDive - surfacePressureValue) * P)
+        let den = (-a * b * (gfHigh - gfLow) + (1.0 - b) * (gfLow * gfLowPressureValueThisDive - gfHigh * surfacePressureValue) + b * (gfLowPressureValueThisDive - surfacePressureValue))
+        tolerated = num / den
+    }
+    else {
+        tolerated = retToleranceLimitAmbientPressure
+    }
+    
+    let rounded = ((tolerated - surfacePressureValue) * 10000).rounded() / 10000
+    
+    let ceilingGaugePressureValue: Double = max(rounded, 0.0)
+    
+    return .init(value: ceilingGaugePressureValue, unit: .bars)
 }

@@ -11,4 +11,5 @@ struct DecompressionState {
     var decoStops: [DecoStop]
     var currentStopGaugePressure: Measurement<UnitPressure>
     var currentStopDepth: Measurement<UnitLength>
+    var gfLowPressureThisDive: Measurement<UnitPressure>
 }

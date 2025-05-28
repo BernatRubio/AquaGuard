@@ -46,18 +46,9 @@ struct TissueGasSimulator {
             
             session.compartments[i].helium.pressure = .init(value: ph, unit: .bars)
             
-            session.compartments[i].gaugeCeiling = calculateCeilingGaugePressure(
-                Pn: pn,
-                an: session.compartments[i].nitrogen.a,
-                bn: session.compartments[i].nitrogen.b,
-                Phe: ph,
-                ahe: session.compartments[i].helium.a,
-                bhe: session.compartments[i].helium.b,
-                gf: session.gradientFactors.current,
-                surfacePressure: surfacePressure
-            )
-            
             session.compartments[i].modificationDate = .now
         }
+        
+        session.updateCompartmentsCeilings()
     }
 }
