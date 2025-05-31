@@ -158,7 +158,8 @@ class DiveSession {
         var compartments: [TissueCompartment] = []
 
         let surfacePressure = firstMeasurement.surfacePressure.converted(to: .bars)
-        let nitrogenPressure = calculateAlveolarPressure(Pamb: surfacePressure.value, Q: config.nitrogenPercentage, RQ: config.respiratoryQuotient)
+        let surfaceNitrogenPercentage: Double = 0.79
+        let nitrogenPressure = calculateAlveolarPressure(Pamb: surfacePressure.value, Q: surfaceNitrogenPercentage, RQ: config.respiratoryQuotient)
 
         for i in 0..<ZHL16_N2.count {
             let nitrogenComponent = TissueGasComponent(
